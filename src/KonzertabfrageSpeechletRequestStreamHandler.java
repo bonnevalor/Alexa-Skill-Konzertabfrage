@@ -22,7 +22,7 @@ public class KonzertabfrageSpeechletRequestStreamHandler extends SpeechletReques
          * This Id can be found on https://developer.amazon.com/edw/home.html#/ "Edit" the relevant
          * Alexa Skill and put the relevant Application Ids in this Set.
          */
-        supportedApplicationIds.add("amzn1.ask.skill.5725a42e-91e3-47f9-b9fb-99cda946ab8f");
+        supportedApplicationIds.add("amzn1.ask.skill.d530b7c3-4cae-494b-995a-aee924c5ac1d");
     }
 	
 	
