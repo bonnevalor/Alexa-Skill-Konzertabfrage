@@ -69,8 +69,16 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	@Override
 	public SpeechletResponse onIntent(IntentRequest arg0, Session arg1) throws SpeechletException {
 
-		//Noch einfügen!
-		return null;
+		Intent i = arg0.getIntent();
+		String name = i.getSlot("artist").getValue();
+		
+		SpeechletResponse r = new SpeechletResponse();
+		PlainTextOutputSpeech antwort = new PlainTextOutputSpeech();
+		antwort.setText("Du willst zu "+ name + "ähnliche Künstler gennant haben. Schade.");
+		r.setOutputSpeech(antwort);
+		
+		
+		return r;
 	}
 
 	@Override
@@ -104,9 +112,11 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	private SpeechletResponse getWelcomeResponse() {
         // Create the welcome message.
         String speechText =
-                "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
+              "Willkommen.";
+        		//  "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
         String repromptText =
                 "Welche band wollen sie live sehen";
+        		
 
         return getSpeechletResponse(speechText, repromptText, true);
     }
