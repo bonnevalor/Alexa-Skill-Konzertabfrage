@@ -26,9 +26,10 @@ public class KonzertabfrageSpeechletRequestStreamHandler extends SpeechletReques
     	
     	//Id von Flo
 		supportedApplicationIds.add("amzn1.ask.skill.d530b7c3-4cae-494b-995a-aee924c5ac1d");
+		supportedApplicationIds.add("amzn1.ask.skill.a1926dab-ac4e-4c20-91c4-bb0fd1aea8d5");
     	//Id von Markus
 		supportedApplicationIds.add("amzn1.ask.skill.5725a42e-91e3-47f9-b9fb-99cda946ab8f");
-		supportedApplicationIds.add("amzn1.ask.skill.a1926dab-ac4e-4c20-91c4-bb0fd1aea8d5");
+		
 	}
 
 }

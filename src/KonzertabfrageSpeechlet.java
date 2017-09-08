@@ -1,4 +1,8 @@
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +18,11 @@ import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import generated.Artist;
+import generated.Entry;
 
 public class KonzertabfrageSpeechlet implements Speechlet {
 
@@ -71,13 +80,16 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 
 		Intent i = arg0.getIntent();
 		String name = i.getSlot("artist").getValue();
-		
+		String similarArtist = LastFM.getSimilarArtist(name);
 		SpeechletResponse r = new SpeechletResponse();
 		PlainTextOutputSpeech antwort = new PlainTextOutputSpeech();
-		antwort.setText("Du willst zu "+ name + "ähnliche Künstler gennant haben. Schade.");
-		r.setOutputSpeech(antwort);
-		
-		
+		if (similarArtist.equals(LastFM.RETREVEAL_FAILED)) {
+			antwort.setText("Es ist ein Fehler bei der Abfrage aufgetreten, bitte kontaktieren sie den Entwickler.");
+		} else {
+			antwort.setText("Ähnliche Künstler sind "+ similarArtist);
+			r.setOutputSpeech(antwort);
+		}
+				
 		return r;
 	}
 
