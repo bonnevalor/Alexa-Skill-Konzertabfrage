@@ -63,6 +63,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	// return r;
 	// }
 
+	
 	@Override
 	public SpeechletResponse onIntent(IntentRequest arg0, Session arg1) throws SpeechletException {
 
@@ -71,10 +72,11 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	}
 
 	@Override
-	public SpeechletResponse onLaunch(LaunchRequest arg0, Session arg1) throws SpeechletException {
+	public SpeechletResponse onLaunch(final LaunchRequest request, final Session session) throws SpeechletException {
+		log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(),
+                session.getSessionId());
+        return getWelcomeResponse();
 		
-		//NOCH EINFÜGEN
-		return null;
 		
 	}
 
@@ -89,4 +91,22 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 		// TODO Auto-generated method stub
 
 	}
+	
+	/**
+	 * Geeting Phrase at the Begining of the Skill
+	 * 
+	 * @author mbeckert
+	 * 
+	 */
+	
+	private SpeechletResponse getWelcomeResponse() {
+        // Create the welcome message.
+        String speechText =
+                "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
+        String repromptText =
+                "Welche band wollen sie live sehen";
+
+        return getSpeechletResponse(speechText, repromptText, true);
+    }
+
 }
