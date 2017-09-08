@@ -12,6 +12,8 @@ import com.amazon.speech.speechlet.Speechlet;
 import com.amazon.speech.speechlet.SpeechletException;
 import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
+import com.amazon.speech.ui.Reprompt;
+import com.amazon.speech.ui.SimpleCard;
 
 public class KonzertabfrageSpeechlet implements Speechlet {
 
@@ -107,6 +109,31 @@ public class KonzertabfrageSpeechlet implements Speechlet {
                 "Welche band wollen sie live sehen";
 
         return getSpeechletResponse(speechText, repromptText, true);
+    }
+	
+	private SpeechletResponse getSpeechletResponse(String speechText, String repromptText,
+            boolean isAskResponse) {
+        // Create the Simple card content.
+        SimpleCard card = new SimpleCard();
+        card.setTitle("Session");
+        card.setContent(speechText);
+
+        // Create the plain text output.
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText(speechText);
+
+        if (isAskResponse) {
+            // Create reprompt
+            PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
+            repromptSpeech.setText(repromptText);
+            Reprompt reprompt = new Reprompt();
+            reprompt.setOutputSpeech(repromptSpeech);
+
+            return SpeechletResponse.newAskResponse(speech, reprompt, card);
+
+        } else {
+            return SpeechletResponse.newTellResponse(speech, card);
+        }
     }
 
 }
