@@ -115,7 +115,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
               "Willkommen.";
         		//  "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
         String repromptText =
-                "Welche band wollen sie live sehen";
+        		"Welche Band wollen sie live sehen";
         		
 
         return getSpeechletResponse(speechText, repromptText, true);
