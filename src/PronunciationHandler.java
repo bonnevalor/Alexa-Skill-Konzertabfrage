@@ -11,6 +11,13 @@ public class PronunciationHandler {
 	// Api Settings
 	public static final String RETRIEVAL_FAILED = "PronunciationHandler:Invalid or missing response";
 
+	/**
+	 * Diese Klasse Verbindet sich mit http://lingorado.com/ipa/ um die IPA Codierung eines englischen Wortes zu ermitteln
+	 * @author mbeckert
+	 * @param artist
+	 * @return String
+	 */
+	
 	public static String getIPA(String artist) {
 
 		Document doc = null;
