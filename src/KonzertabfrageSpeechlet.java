@@ -2,6 +2,7 @@
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
+import com.amazon.speech.ui.SsmlOutputSpeech;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -74,32 +76,50 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	// return r;
 	// }
 
-	
 	@Override
 	public SpeechletResponse onIntent(IntentRequest intentRequest, Session session) throws SpeechletException {
 
 		Intent intent = intentRequest.getIntent();
 		String name = intent.getSlot("artist").getValue();
-		String similarArtist = LastFM.getSimilarArtist(name);
+		LinkedList<String> similarAtristsList = LastFM.getSimilarArtistsList(name);
 		SpeechletResponse speechletResponse = new SpeechletResponse();
-		PlainTextOutputSpeech antwort = new PlainTextOutputSpeech();
-		if (similarArtist.equals(LastFM.RETREVEAL_FAILED)) {
-			antwort.setText("Es ist ein Fehler bei der Abfrage aufgetreten, bitte kontaktieren sie den Entwickler.");
+
+		SsmlOutputSpeech antwort = new SsmlOutputSpeech();
+		if (similarAtristsList.contains(LastFM.RETRIEVAL_FAILED)) {
+			antwort.setSsml(
+					"<speak> <emphasis level=\"strong\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\"interjection\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p></speak>");
+		
+		
 		} else {
-			antwort.setText("Ähnliche Künstler sind "+ similarArtist);
+			
+		
+			antwort.setSsml(
+					"<speak> <emphasis level=\"strong\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\"interjection\">ohne scheiß.</say-as> </p> <p>Bitte kontaktieren sie den Entwickler.</p></speak>");
+		
 			speechletResponse.setOutputSpeech(antwort);
+			
 		}
-				
+
 		return speechletResponse;
 	}
 
+	// PlainTextOutputSpeech antwort = new PlainTextOutputSpeech();
+	// if (similarArtist.equals(LastFM.RETREVEAL_FAILED)) {
+	// antwort.setText("Es ist ein Fehler bei der Abfrage aufgetreten, bitte
+	// kontaktieren sie den Entwickler.");
+	// } else {
+	// antwort.setText("Ähnliche Künstler sind "+ similarArtist);
+	// speechletResponse.setOutputSpeech(antwort);
+	// }
+	//
+	// return speechletResponse;
+	// }
+
 	@Override
 	public SpeechletResponse onLaunch(final LaunchRequest request, final Session session) throws SpeechletException {
-		log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(),
-                session.getSessionId());
-        return getWelcomeResponse();
-		
-		
+		log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
+		return getWelcomeResponse();
+
 	}
 
 	@Override
@@ -113,49 +133,45 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	/**
 	 * Geeting Phrase at the Begining of the Skill
 	 * 
 	 * @author mbeckert
 	 * 
 	 */
-	
+
 	private SpeechletResponse getWelcomeResponse() {
-        // Create the welcome message.
-        String speechText =
-              "Willkommen.";
-        		//  "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
-        String repromptText =
-        		"Welche Band wollen sie live sehen";
-        		
+		// Create the welcome message.
+		String speechText = "Willkommen.";
+		// "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
+		String repromptText = "Welche Band gefällt Ihnen?";
 
-        return getSpeechletResponse(speechText, repromptText, true);
-    }
-	
-	private SpeechletResponse getSpeechletResponse(String speechText, String repromptText,
-            boolean isAskResponse) {
-        // Create the Simple card content.
-        SimpleCard card = new SimpleCard();
-        card.setTitle("Session");
-        card.setContent(speechText);
+		return getSpeechletResponse(speechText, repromptText, true);
+	}
 
-        // Create the plain text output.
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText(speechText);
+	private SpeechletResponse getSpeechletResponse(String speechText, String repromptText, boolean isAskResponse) {
+		// Create the Simple card content.
+		SimpleCard card = new SimpleCard();
+		card.setTitle("Session");
+		card.setContent(speechText);
 
-        if (isAskResponse) {
-            // Create reprompt
-            PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
-            repromptSpeech.setText(repromptText);
-            Reprompt reprompt = new Reprompt();
-            reprompt.setOutputSpeech(repromptSpeech);
+		// Create the plain text output.
+		PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+		speech.setText(speechText);
 
-            return SpeechletResponse.newAskResponse(speech, reprompt, card);
+		if (isAskResponse) {
+			// Create reprompt
+			PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
+			repromptSpeech.setText(repromptText);
+			Reprompt reprompt = new Reprompt();
+			reprompt.setOutputSpeech(repromptSpeech);
 
-        } else {
-            return SpeechletResponse.newTellResponse(speech, card);
-        }
-    }
+			return SpeechletResponse.newAskResponse(speech, reprompt, card);
+
+		} else {
+			return SpeechletResponse.newTellResponse(speech, card);
+		}
+	}
 
 }
