@@ -76,21 +76,21 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 
 	
 	@Override
-	public SpeechletResponse onIntent(IntentRequest arg0, Session arg1) throws SpeechletException {
+	public SpeechletResponse onIntent(IntentRequest intentRequest, Session session) throws SpeechletException {
 
-		Intent i = arg0.getIntent();
-		String name = i.getSlot("artist").getValue();
+		Intent intent = intentRequest.getIntent();
+		String name = intent.getSlot("artist").getValue();
 		String similarArtist = LastFM.getSimilarArtist(name);
-		SpeechletResponse r = new SpeechletResponse();
+		SpeechletResponse speechletResponse = new SpeechletResponse();
 		PlainTextOutputSpeech antwort = new PlainTextOutputSpeech();
 		if (similarArtist.equals(LastFM.RETREVEAL_FAILED)) {
 			antwort.setText("Es ist ein Fehler bei der Abfrage aufgetreten, bitte kontaktieren sie den Entwickler.");
 		} else {
 			antwort.setText("Ähnliche Künstler sind "+ similarArtist);
-			r.setOutputSpeech(antwort);
+			speechletResponse.setOutputSpeech(antwort);
 		}
 				
-		return r;
+		return speechletResponse;
 	}
 
 	@Override
