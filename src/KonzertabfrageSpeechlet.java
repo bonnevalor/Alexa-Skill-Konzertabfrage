@@ -32,7 +32,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	private static final Logger log = LoggerFactory.getLogger(KonzertabfrageSpeechlet.class);
 
 	/**
-	 * Diese methoden werden aus Nostalgiegründen als Kommentare Behalten.
+	 * Diese methoden werden aus NostalgiegrÃ¼nden als Kommentare Behalten.
 	 * 
 	 * @author Florian
 	 */
@@ -55,9 +55,9 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	// || content_of_slot.equals("marcus")) {
 	//
 	// text.setText(content_of_slot
-	// + " besitzt keine Autorisierung für dieses Gelände. Sicherheitsdienst
-	// verständigt. Bitte bleiben Sie vor Ort. Sie werden umgehend gelöscht.
-	// Verzeihung, ich meine vom Gelände eskortiert.");
+	// + " besitzt keine Autorisierung fÃ¼r dieses GelÃ¤nde. Sicherheitsdienst
+	// verstÃ¤ndigt. Bitte bleiben Sie vor Ort. Sie werden umgehend gelÃ¶scht.
+	// Verzeihung, ich meine vom GelÃ¤nde eskortiert.");
 	// } else {
 	// text.setText(content_of_slot + " autorisiert. Herzlich willkommen!");
 	// }
@@ -81,45 +81,51 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	public SpeechletResponse onIntent(IntentRequest intentRequest, Session session) throws SpeechletException {
 
 		Intent intent = intentRequest.getIntent();
-		String name = intent.getSlot("artist").getValue();
-		ArrayList<String> similarAtristsList = LastFM.getSimilarArtistsList(name);
+		String artistName = intent.getSlot("artist").getValue();
+		ArrayList<String> similarAtristsList = LastFM.getSimilarArtistsList(artistName);
 		SpeechletResponse speechletResponse = new SpeechletResponse();
 
 		SsmlOutputSpeech antwort = new SsmlOutputSpeech();
 		if (similarAtristsList.contains(LastFM.RETRIEVAL_FAILED)) {
 			antwort.setSsml(
-					"<speak> <emphasis level=\"strong\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\"interjection\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p></speak>");
+					"<speak> <emphasis level=\"strong\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\"interjection\">ohne scheiÃŸ.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p></speak>");
 
 		} else {
 
 			String antwortString = "";
-			int index = 0;
-			while (similarAtristsList.size() >= index+1) {
-				antwortString.concat(similarAtristsList.get(index)+ "<break>");
-				index++;
-			}
-			antwortString.concat(" sowie" + similarAtristsList.get(index));
-			String response = "Ähnliche Künstler sind <break>" + antwortString +"<p> Außerdem solltest du dir <phoneme alphabet=\"x-sampa\" ph=\"R AH N M EY D AH N\">Iron Maiden</phoneme> anhören.";
-			antwort.setSsml(SsmlHelper.wrapInSpeak(response));
 
+			for (int i = 0; i < similarAtristsList.size() - 1; i++) {
+				antwortString = antwortString + similarAtristsList.get(i) + "<break/>";
+			}
+
+			antwortString = antwortString + "sowie " + similarAtristsList.get(similarAtristsList.size() - 1);
+
+			antwort.setSsml(SsmlHelper.wrapInSpeak(
+					"<prosody pitch='+15%'>Ã„hnliche</prosody> KÃ¼nstler sind beispielsweise:" + antwortString
+			// + "<p> Aber hÃ¶r dir lieber mal "
+			// + "<emphasis><phoneme alphabet ='ipa' ph='ËˆaÉªÉ™rn ËˆmeÉªdÉ™n'>Iron
+			// Maiden</phoneme></emphasis> an!</p>"
+			// Unnecessary addition :-)
+			));
+
+//			mal schaun
 			speechletResponse.setOutputSpeech(antwort);
 
 		}
+		SimpleCard card = new SimpleCard();
+		card.setTitle("Ã„hnliche KÃ¼nstler zu: " + artistName);
 
+		String cardContent = "";
+		for (int i = 0; i < similarAtristsList.size(); i++) {
+			cardContent = cardContent + similarAtristsList.get(i) + "\n \r\n";
+		}
+		cardContent = cardContent + "\r\n Diese Informationen stammen von Last.fm";
+		
+		card.setContent(cardContent);
+
+		speechletResponse.setCard(card);
 		return speechletResponse;
 	}
-
-	// PlainTextOutputSpeech antwort = new PlainTextOutputSpeech();
-	// if (similarArtist.equals(LastFM.RETREVEAL_FAILED)) {
-	// antwort.setText("Es ist ein Fehler bei der Abfrage aufgetreten, bitte
-	// kontaktieren sie den Entwickler.");
-	// } else {
-	// antwort.setText("Ähnliche Künstler sind "+ similarArtist);
-	// speechletResponse.setOutputSpeech(antwort);
-	// }
-	//
-	// return speechletResponse;
-	// }
 
 	@Override
 	public SpeechletResponse onLaunch(final LaunchRequest request, final Session session) throws SpeechletException {
@@ -151,7 +157,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 		// Create the welcome message.
 		String speechText = "Willkommen.";
 		// "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
-		String repromptText = "Welche Band gefällt Ihnen?";
+		String repromptText = "Welche Band gefÃ¤llt Ihnen?";
 
 		return getSpeechletResponse(speechText, repromptText, true);
 	}
