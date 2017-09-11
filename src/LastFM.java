@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,9 +49,9 @@ public class LastFM {
 		return similarArtist;
 	}
 
-	public static LinkedList<String> getSimilarArtistsList(String artist) {
+	public static ArrayList<String> getSimilarArtistsList(String artist) {
 		ObjectMapper mapper = new ObjectMapper();
-		LinkedList<String> similarArtistsList = new LinkedList<String>();
+		ArrayList<String> similarArtistsList = new ArrayList<String>();
 		String queryUrl = getQueryStringSimilarArtist(artist);
 		Entry obj;
 		try {

@@ -1,5 +1,5 @@
  
-public class SpeechHelper {
+public class SsmlHelper {
  
     public static final String CARDINAL = "cardinal";
     public static final String ORDINAL = "ordinal";
@@ -21,10 +21,16 @@ public class SpeechHelper {
         return "<say-as interpret-as=\""+type+"\">"+s+"</say-as>";
          
     }
-    public static String createBreak(int seconds)
+    public static String timedBreak(int seconds)
     {
         return "<break time=\""+seconds+"s\"/>";
          
     }
+    
+//    public static String break()
+//    {
+//        return "<break>";
+//         
+//    }
  
 }

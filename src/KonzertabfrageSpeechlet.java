@@ -2,6 +2,7 @@
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.slf4j.Logger;
@@ -81,23 +82,28 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 
 		Intent intent = intentRequest.getIntent();
 		String name = intent.getSlot("artist").getValue();
-		LinkedList<String> similarAtristsList = LastFM.getSimilarArtistsList(name);
+		ArrayList<String> similarAtristsList = LastFM.getSimilarArtistsList(name);
 		SpeechletResponse speechletResponse = new SpeechletResponse();
 
 		SsmlOutputSpeech antwort = new SsmlOutputSpeech();
 		if (similarAtristsList.contains(LastFM.RETRIEVAL_FAILED)) {
 			antwort.setSsml(
 					"<speak> <emphasis level=\"strong\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\"interjection\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p></speak>");
-		
-		
+
 		} else {
-			
-		
-			antwort.setSsml(
-					"<speak> <emphasis level=\"strong\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\"interjection\">ohne scheiß.</say-as> </p> <p>Bitte kontaktieren sie den Entwickler.</p></speak>");
-		
+
+			String antwortString = "";
+			int index = 0;
+			while (similarAtristsList.size() >= index+1) {
+				antwortString.concat(similarAtristsList.get(index)+ "<break>");
+				index++;
+			}
+			antwortString.concat(" sowie" + similarAtristsList.get(index));
+			String response = "Ähnliche Künstler sind <break>" + antwortString +"<p> Außerdem solltest du dir <phoneme alphabet=\"x-sampa\" ph=\"R AH N M EY D AH N\">Iron Maiden</phoneme> anhören.";
+			antwort.setSsml(SsmlHelper.wrapInSpeak(response));
+
 			speechletResponse.setOutputSpeech(antwort);
-			
+
 		}
 
 		return speechletResponse;
