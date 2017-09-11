@@ -78,6 +78,11 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	// }
 
 	@Override
+
+	/**
+	 * For now this method handles all Intents, but the actual work done is the handling of 'artistIntent'
+	 * @author Florian 
+	 */
 	public SpeechletResponse onIntent(IntentRequest intentRequest, Session session) throws SpeechletException {
 
 		Intent intent = intentRequest.getIntent();
@@ -108,10 +113,17 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 			// Unnecessary addition :-)
 			));
 
-//			mal schaun
+			// mal schaun
 			speechletResponse.setOutputSpeech(antwort);
 
 		}
+
+		/**
+		 * This part generates a Card Response, with a reference to the searched term in
+		 * the Title and the answers in the content.
+		 * 
+		 * @author Florian
+		 */
 		SimpleCard card = new SimpleCard();
 		card.setTitle("Ähnliche Künstler zu: " + artistName);
 
@@ -120,7 +132,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 			cardContent = cardContent + similarAtristsList.get(i) + "\n \r\n";
 		}
 		cardContent = cardContent + "\r\n Diese Informationen stammen von Last.fm";
-		
+
 		card.setContent(cardContent);
 
 		speechletResponse.setCard(card);
