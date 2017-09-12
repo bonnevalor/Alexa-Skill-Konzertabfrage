@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +29,7 @@ public class LastFM {
 	private Entry obj;
 	// Artist
 	String artist;
-	//List of German Tags
+	// List of German Tags
 	String[] germanTags = { "german", "deutsch", "austrian" };
 
 	// Constructor
@@ -78,13 +80,13 @@ public class LastFM {
 
 	public Boolean checkGerman() {
 		for (Tag t : obj.artist.tags.tag) {
-			int i=0;
+			int i = 0;
 			while (i < germanTags.length) {
-				if (t.name.contains(germanTags[i])) {
+				if (t.name.toLowerCase().contains((germanTags[i].toLowerCase()))) {
 					return true;
 				}
 				i++;
-			}	
+			}
 		}
 		return false;
 	}
@@ -113,16 +115,19 @@ public class LastFM {
 	 * @param artist
 	 * @return String queryurl
 	 */
+	@SuppressWarnings("deprecation")
 	private String getQueryStringInfoArtist(String artist) {
-		String queryUrl = ROOT_URL + "method=artist.getinfo&autocorrect=" + AUTOCORRECT + "&artist=" + artist
+		String queryUrl = ROOT_URL + "method=artist.getinfo&artist=" + artist + "&autocorrect=" + AUTOCORRECT
 				+ "&api_key=" + API_KEY + "&format=json";
+		//Sometimes there is an error with spaces and the lastfm api
+		queryUrl = queryUrl.replace(" ", "+");
 		return queryUrl;
 	}
 
-//	public static void main(String[] args) {
-//		// System.out.println(getQueryStringSimilarArtist("Madsen"));
-//		LastFM lastfm = new LastFM("Trailerpark");
-//		System.out.println("is German: "+lastfm.checkGerman());
-//		System.out.println("Similar Artists: "+ lastfm.getSimilarArtistsList());
-//	}
+	public static void main(String[] args) {
+		LastFM lastfm = new LastFM("Timi Hendrix");
+
+		System.out.println("is German: " + lastfm.checkGerman());
+		System.out.println("Similar Artists: " + lastfm.getSimilarArtistsList());
+	}
 }
