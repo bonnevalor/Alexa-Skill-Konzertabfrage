@@ -27,9 +27,9 @@ public class EventimScraper {
 		// get relevant elements
 
 		Elements titelElements = doc.getElementsByAttributeValue("id", "searchResultList");
-
-
-
+		Elements test = doc.select("Künstler");
+		test.get(0).siblingElements();
+test.get(0).
 		int künstlerIndex = 0;
 		while (titelElements.get(künstlerIndex).text().contains("Künstler") != true) {
 			künstlerIndex++;
