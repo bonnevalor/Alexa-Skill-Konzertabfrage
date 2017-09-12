@@ -74,10 +74,10 @@ public class SsmlHelper {
 
 	public static String phonemeIPA(String input) {
 		String ipa = SsmlPronunciation.getIPA(input);
-		return "<phoneme alphabet=\"ipa\" ph=" + ipa + ">" + input + "</phoneme>";
+		return "<phoneme alphabet=\"ipa\" ph=\"" + ipa + "\">" + input + "</phoneme>";
 	}
 
-	public static void main(String[] args) {
-		System.out.println(prosody("Tes", "+15%"));
-	}
+//	public static void main(String[] args) {
+//		System.out.println(prosody("Tes", "+15%"));
+//	}
 }
