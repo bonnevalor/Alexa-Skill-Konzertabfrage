@@ -90,8 +90,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 
 		SsmlOutputSpeech antwort = new SsmlOutputSpeech();
 		if (similarAtristsList.contains(lastfm.RETRIEVAL_FAILED)) {
-			antwort.setSsml(
-					"<speak> <emphasis level=\"strong\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\"interjection\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p></speak>");
+			antwort.setSsml(SsmlHelper.wrapInSpeak("<emphasis level=\\\"strong\\\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\\\"interjection\\\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p>"));
 
 		} else {
 
