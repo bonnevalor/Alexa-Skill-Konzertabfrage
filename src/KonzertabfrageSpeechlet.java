@@ -77,39 +77,48 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	@Override
 
 	/**
-	 * For now this method handles all Intents, but the actual work done is the handling of 'artistIntent'
-	 * @author Florian 
+	 * For now this method handles all Intents, but the actual work done is the
+	 * handling of 'artistIntent'
+	 * 
+	 * @author Florian
 	 */
 	public SpeechletResponse onIntent(IntentRequest intentRequest, Session session) throws SpeechletException {
 
 		Intent intent = intentRequest.getIntent();
 		String artistName = intent.getSlot("artist").getValue();
-		LastFM lastfm = new LastFM (artistName);
+		LastFM lastfm = new LastFM(artistName);
 		ArrayList<String> similarAtristsList = lastfm.getSimilarArtistsList();
 		SpeechletResponse speechletResponse = new SpeechletResponse();
 
 		SsmlOutputSpeech antwort = new SsmlOutputSpeech();
 		if (similarAtristsList.contains(lastfm.RETRIEVAL_FAILED)) {
-			antwort.setSsml(SsmlHelper.wrapInSpeak("<emphasis level=\\\"strong\\\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\\\"interjection\\\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p>"));
+			antwort.setSsml(SsmlHelper.wrapInSpeak(
+					"<emphasis level=\\\"strong\\\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\\\"interjection\\\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p>"));
 
 		} else {
 
 			String antwortString = "";
 
 			for (int i = 0; i < similarAtristsList.size() - 1; i++) {
-				LastFM sArtist = new LastFM (similarAtristsList.get(i));
+				LastFM sArtist = new LastFM(similarAtristsList.get(i));
 				if (sArtist.checkGerman()) {
 					antwortString = antwortString + similarAtristsList.get(i) + "<break/>";
 				} else {
 					antwortString = antwortString + SsmlHelper.phonemeIPA(similarAtristsList.get(i)) + "<break/>";
 				}
-				
+
 			}
 
 			antwortString = antwortString + "sowie " + similarAtristsList.get(similarAtristsList.size() - 1);
+			String sArtistName;
+			if (lastfm.checkGerman()) {
+				sArtistName = artistName;
 
-			antwort.setSsml(SsmlHelper.wrapInSpeak(SsmlHelper.prosody("Ähnliche", "+15%")+
-					" Künstler zu sind beispielsweise: " + antwortString));
+			} else {
+				sArtistName = SsmlHelper.phonemeIPA(artistName);
+			}
+			antwort.setSsml(SsmlHelper.wrapInSpeak(SsmlHelper.prosody("Ähnliche", "+15%") + " Künstler zu "
+					+ sArtistName + "sind beispielsweise: " + antwortString));
 
 			// mal schaun
 			speechletResponse.setOutputSpeech(antwort);
