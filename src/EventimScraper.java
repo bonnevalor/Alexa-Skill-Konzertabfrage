@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 public class EventimScraper {
 
 	public static void main(String[] args) {
-		getArtistEventOverviewPageUrl("madsen");
+		getArtistEventOverviewPageUrl("Rolling stones");
 	}
 
 	public static String getArtistEventOverviewPageUrl(String name) {
@@ -26,8 +26,20 @@ public class EventimScraper {
 
 		// get relevant elements
 
-		Elements titelElements = doc.getElementsByTag("h3");
+		Elements titelElements = doc.getElementsByAttributeValue("id", "searchResultList");
 
+
+
+		int künstlerIndex = 0;
+		while (titelElements.get(künstlerIndex).text().contains("Künstler") != true) {
+			künstlerIndex++;
+		}
+
+		for (int i = 0; i <= künstlerIndex; i++) {
+			titelElements.remove(0);
+		}
+
+		System.out.println(titelElements);
 		// make an arraylist to send to bestMatchIndex
 		ArrayList<String> titelArray = new ArrayList<String>();
 		for (Element a : titelElements) {
