@@ -167,7 +167,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 
 	private SpeechletResponse getWelcomeResponse() {
 		// Create the welcome message.
-		String speechText = "Willkommen.";
+		String speechText = "Willkommen. Welche Band gefällt ihnen?";
 		// "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
 		String repromptText = "Welche Band gefällt Ihnen?";
 
