@@ -118,7 +118,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 				sArtistName = SsmlHelper.phonemeIPA(artistName);
 			}
 			antwort.setSsml(SsmlHelper.wrapInSpeak(SsmlHelper.prosody("Ähnliche", "+15%") + " Künstler zu "
-					+ sArtistName + "sind beispielsweise: " + antwortString));
+					+ sArtistName + " sind beispielsweise: " + antwortString));
 
 			// mal schaun
 			speechletResponse.setOutputSpeech(antwort);
