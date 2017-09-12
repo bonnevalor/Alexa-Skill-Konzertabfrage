@@ -124,10 +124,10 @@ public class LastFM {
 		return queryUrl;
 	}
 
-	public static void main(String[] args) {
-		LastFM lastfm = new LastFM("Timi Hendrix");
-
-		System.out.println("is German: " + lastfm.checkGerman());
-		System.out.println("Similar Artists: " + lastfm.getSimilarArtistsList());
-	}
+//	public static void main(String[] args) {
+//		LastFM lastfm = new LastFM("Timi Hendrix");
+//
+//		System.out.println("is German: " + lastfm.checkGerman());
+//		System.out.println("Similar Artists: " + lastfm.getSimilarArtistsList());
+//	}
 }
