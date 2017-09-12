@@ -54,25 +54,30 @@ public class SsmlHelper {
 		return "<break/>";
 
 	}
-	
+
 	/**
 	 * Change Prosody
 	 * 
 	 * @return
 	 */
 
-	public static String prosody (String s, String value) {
-		return "<prosody pitch="+value+">"+s+"</prosody>";
+	public static String prosody(String s, String value) {
+		return "<prosody pitch=\"" + value + "\">" + s + "</prosody>";
 	}
+
 	/**
 	 * Wrapps the phoneme Tags to the Output String and add the Ipa Information
+	 * 
 	 * @param input
 	 * @return
 	 */
-	
+
 	public static String phonemeIPA(String input) {
 		String ipa = SsmlPronunciation.getIPA(input);
 		return "<phoneme alphabet=\"ipa\" ph=" + ipa + ">" + input + "</phoneme>";
 	}
 
+	public static void main(String[] args) {
+		System.out.println(prosody("Tes", "+15%"));
+	}
 }

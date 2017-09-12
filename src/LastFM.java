@@ -119,10 +119,10 @@ public class LastFM {
 		return queryUrl;
 	}
 
-	public static void main(String[] args) {
-		// System.out.println(getQueryStringSimilarArtist("Madsen"));
-		LastFM lastfm = new LastFM("Trailerpark");
-		System.out.println("is German: "+lastfm.checkGerman());
-		System.out.println("Similar Artists: "+ lastfm.getSimilarArtistsList());
-	}
+//	public static void main(String[] args) {
+//		// System.out.println(getQueryStringSimilarArtist("Madsen"));
+//		LastFM lastfm = new LastFM("Trailerpark");
+//		System.out.println("is German: "+lastfm.checkGerman());
+//		System.out.println("Similar Artists: "+ lastfm.getSimilarArtistsList());
+//	}
 }
