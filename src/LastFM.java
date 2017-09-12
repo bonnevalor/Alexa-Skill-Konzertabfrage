@@ -1,84 +1,128 @@
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import generated.Artist;
-import generated.Entry;
+import generated.apiLastFM.Artist_;
+//import generated.Entry;
+import generated.apiLastFM.Entry;
+import generated.apiLastFM.Tag;
 
 public class LastFM {
 
 	// Api Key for LastFM api
-	private static final String API_KEY = "443dbedaa3a878fd0ddd50d469ef77cf";
+	private final String API_KEY = "443dbedaa3a878fd0ddd50d469ef77cf";
 	// API Root URL
-	private static final String ROOT_URL = "http://ws.audioscrobbler.com/2.0/?";
+	private final String ROOT_URL = "http://ws.audioscrobbler.com/2.0/?";
 	// Api Settings
-	public static final String AUTOCORRECT = "1";
-	public static final String LIMIT = "3"; // minimum is 3
+	public final String AUTOCORRECT = "1";
+	// Limit for the answers
+	public final String LIMIT = "3"; // minimum is 3
+	// Error return String
+	public final String RETRIEVAL_FAILED = "LASTFM:Invalid or missing response";
+	// Bool value of RETRIEVAL_FAILED. Normally false if no error occurs
+	private Boolean boolRetrieval = false;
+	// Generated InfoArtist Obj
+	private Entry obj;
+	// Artist
+	String artist;
+	//List of German Tags
+	String[] germanTags = { "german", "deutsch", "austrian" };
 
-	public static final String RETRIEVAL_FAILED = "LASTFM:Invalid or missing response";
-	private LastFM() {
-	}
-	
-	
-
-	// JSON from URL to Object
-
-	public static String getSimilarArtist(String artist) {
+	// Constructor
+	LastFM(String artist) {
+		this.artist = artist;
 		ObjectMapper mapper = new ObjectMapper();
-		String similarArtist = " ";
-		String queryUrl = getQueryStringSimilarArtist(artist);
-		Entry obj;
+		String queryUrl = getQueryStringInfoArtist(artist);
+
 		try {
 			obj = mapper.readValue(new URL(queryUrl), Entry.class);
 		} catch (IOException e) {
-			
-			//e.printStackTrace();
-			return RETRIEVAL_FAILED;
+			// e.printStackTrace();
+			boolRetrieval = true;
 		}
-		for (Artist a : obj.similarartists.artist) {
-			//System.out.println(a.name);
-			similarArtist += a.name+", ";
-		}
-		return similarArtist;
+
 	}
 
-	public static ArrayList<String> getSimilarArtistsList(String artist) {
-		ObjectMapper mapper = new ObjectMapper();
+	/**
+	 * This Method uses the LASTFM Api to return a ArrayList containing the Similar
+	 * artists divided by comma
+	 * 
+	 * @author flo, mbeckert
+	 * @param artist
+	 * @return ArrayList with Strings
+	 */
+	public ArrayList<String> getSimilarArtistsList() {
 		ArrayList<String> similarArtistsList = new ArrayList<String>();
-		String queryUrl = getQueryStringSimilarArtist(artist);
-		Entry obj;
-		try {
-			obj = mapper.readValue(new URL(queryUrl), Entry.class);
-		} catch (IOException e) {
-			
-			//e.printStackTrace();
+		// If there is an Error with the Api Request, then the list will contain
+		// RETRIEVAL_FAILED
+		if (boolRetrieval) {
 			similarArtistsList.add(RETRIEVAL_FAILED);
 			return similarArtistsList;
 		}
-		for (Artist a : obj.similarartists.artist) {
+		for (Artist_ a : obj.artist.similar.artist) {
 			similarArtistsList.add(a.name);
 		}
-		
 		return similarArtistsList;
-				
 	}
 
-	private static String getQueryStringSimilarArtist(String artist) {
-		String queryUrl = ROOT_URL + "method=artist.getsimilar" + "&limit=" + LIMIT + "&autocorrect=" + AUTOCORRECT
-				+ "&artist=" + artist + "&api_key=" + API_KEY + "&format=json";
+	/**
+	 * This Method checks if there is a tag like "german, deutsch, austrian etc." in
+	 * the tag list of last FM. If there is such an tag, then it is true.
+	 * 
+	 * @author mbeckert
+	 * @param artist
+	 * @return
+	 */
+
+	public Boolean checkGerman() {
+		for (Tag t : obj.artist.tags.tag) {
+			int i=0;
+			while (i < germanTags.length) {
+				if (t.name.contains(germanTags[i])) {
+					return true;
+				}
+				i++;
+			}	
+		}
+		return false;
+	}
+
+	// Not Used Anymore
+	// /**
+	// * This Method builds the LAST FM Query String for the api-method
+	// * "getsimilarartist"
+	// *
+	// * @author mbeckert
+	// * @param artist
+	// * @return String queryurl
+	// */
+	// private static String getQueryStringSimilarArtist(String artist) {
+	// String queryUrl = ROOT_URL + "method=artist.getsimilar" + "&limit=" + LIMIT +
+	// "&autocorrect=" + AUTOCORRECT
+	// + "&artist=" + artist + "&api_key=" + API_KEY + "&format=json";
+	// return queryUrl;
+	// }
+
+	/**
+	 * This Method builds the LAST FM Query String for the api-method
+	 * "getartistinfo"
+	 * 
+	 * @author mbeckert
+	 * @param artist
+	 * @return String queryurl
+	 */
+	private String getQueryStringInfoArtist(String artist) {
+		String queryUrl = ROOT_URL + "method=artist.getinfo&autocorrect=" + AUTOCORRECT + "&artist=" + artist
+				+ "&api_key=" + API_KEY + "&format=json";
 		return queryUrl;
 	}
 
-	// public static void main(String[] args) {
-	// //System.out.println(getQueryStringSimilarArtist("Madsen"));
-	// System.out.println(getSimilarArtist("Madsen"));
-	//
-	// }
+	public static void main(String[] args) {
+		// System.out.println(getQueryStringSimilarArtist("Madsen"));
+		LastFM lastfm = new LastFM("Trailerpark");
+		System.out.println("is German: "+lastfm.checkGerman());
+		System.out.println("Similar Artists: "+ lastfm.getSimilarArtistsList());
+	}
 }

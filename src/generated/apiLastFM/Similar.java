@@ -1,7 +1,8 @@
 
-package generated;
+package generated.apiLastFM;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -12,15 +13,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "#text",
-    "size"
+    "artist"
 })
-public class Image {
+public class Similar {
 
-    @JsonProperty("#text")
-    public String text;
-    @JsonProperty("size")
-    public String size;
+    @JsonProperty("artist")
+    public List<Artist_> artist = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

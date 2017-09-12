@@ -1,5 +1,5 @@
 
-package generated;
+package generated.apiLastFM;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,12 +12,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "similarartists"
+    "name",
+    "url"
 })
-public class Entry {
+public class Tag {
 
-    @JsonProperty("similarartists")
-    public Similarartists similarartists;
+    @JsonProperty("name")
+    public String name;
+    @JsonProperty("url")
+    public String url;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

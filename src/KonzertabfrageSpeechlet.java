@@ -24,9 +24,6 @@ import com.amazon.speech.ui.SsmlOutputSpeech;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import generated.Artist;
-import generated.Entry;
-
 public class KonzertabfrageSpeechlet implements Speechlet {
 
 	private static final Logger log = LoggerFactory.getLogger(KonzertabfrageSpeechlet.class);
@@ -87,11 +84,12 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 
 		Intent intent = intentRequest.getIntent();
 		String artistName = intent.getSlot("artist").getValue();
-		ArrayList<String> similarAtristsList = LastFM.getSimilarArtistsList(artistName);
+		LastFM lastfm = new LastFM (artistName);
+		ArrayList<String> similarAtristsList = lastfm.getSimilarArtistsList();
 		SpeechletResponse speechletResponse = new SpeechletResponse();
 
 		SsmlOutputSpeech antwort = new SsmlOutputSpeech();
-		if (similarAtristsList.contains(LastFM.RETRIEVAL_FAILED)) {
+		if (similarAtristsList.contains(lastfm.RETRIEVAL_FAILED)) {
 			antwort.setSsml(
 					"<speak> <emphasis level=\"strong\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\"interjection\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p></speak>");
 
@@ -100,18 +98,18 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 			String antwortString = "";
 
 			for (int i = 0; i < similarAtristsList.size() - 1; i++) {
-				antwortString = antwortString + similarAtristsList.get(i) + "<break/>";
+				if (lastfm.checkGerman()) {
+					antwortString = antwortString + similarAtristsList.get(i) + "<break/>";
+				} else {
+					antwortString = antwortString + SsmlHelper.phonemeIPA(similarAtristsList.get(i)) + "<break/>";
+				}
+				
 			}
 
 			antwortString = antwortString + "sowie " + similarAtristsList.get(similarAtristsList.size() - 1);
 
-			antwort.setSsml(SsmlHelper.wrapInSpeak(
-					"<prosody pitch='+15%'>Ähnliche</prosody> Künstler sind beispielsweise:" + antwortString
-			// + "<p> Aber hör dir lieber mal "
-			// + "<emphasis><phoneme alphabet ='ipa' ph='ˈaɪərn ˈmeɪdən'>Iron
-			// Maiden</phoneme></emphasis> an!</p>"
-			// Unnecessary addition :-)
-			));
+			antwort.setSsml(SsmlHelper.wrapInSpeak(SsmlHelper.prosody("Ähnliche", "+15%")+
+					" Künstler sind beispielsweise: " + antwortString));
 
 			// mal schaun
 			speechletResponse.setOutputSpeech(antwort);

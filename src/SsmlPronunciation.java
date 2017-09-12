@@ -4,7 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-public class PronunciationHandler {
+public class SsmlPronunciation extends SsmlHelper {
 
 	// API Root URL
 	private static final String ROOT_URL = "http://lingorado.com/ipa/";
@@ -12,20 +12,19 @@ public class PronunciationHandler {
 	public static final String RETRIEVAL_FAILED = "PronunciationHandler:Invalid or missing response";
 
 	/**
-	 * Diese Klasse Verbindet sich mit http://lingorado.com/ipa/ um die IPA Codierung eines englischen Wortes zu ermitteln
+	 * this method connects with http://lingorado.com/ipa/ to get the british english ipa code of words
 	 * @author mbeckert
-	 * @param artist
+	 * @param input
 	 * @return String
 	 */
 	
-	public static String getIPA(String artist) {
+	public static String getIPA(String input) {
 
 		Document doc = null;
 		try {
-			doc = Jsoup.connect(ROOT_URL).data("text_to_transcribe", artist).data("submit", "Show transcription")
+			doc = Jsoup.connect(ROOT_URL).data("text_to_transcribe", input).data("submit", "Show transcription")
 					.post();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			// e.printStackTrace();
 			return RETRIEVAL_FAILED;
 		}
@@ -35,8 +34,8 @@ public class PronunciationHandler {
 
 	}
 
-	public static void main(String[] args) {
-		System.out.println(getIPA("Iron Maiden"));
-	}
+//	public static void main(String[] args) {
+//		System.out.println(getIPA("Iron Maiden"));
+//	}
 
 }
