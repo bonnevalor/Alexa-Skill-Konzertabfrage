@@ -98,7 +98,8 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 			String antwortString = "";
 
 			for (int i = 0; i < similarAtristsList.size() - 1; i++) {
-				if (lastfm.checkGerman()) {
+				LastFM sArtist = new LastFM (similarAtristsList.get(i));
+				if (sArtist.checkGerman()) {
 					antwortString = antwortString + similarAtristsList.get(i) + "<break/>";
 				} else {
 					antwortString = antwortString + SsmlHelper.phonemeIPA(similarAtristsList.get(i)) + "<break/>";
@@ -109,7 +110,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 			antwortString = antwortString + "sowie " + similarAtristsList.get(similarAtristsList.size() - 1);
 
 			antwort.setSsml(SsmlHelper.wrapInSpeak(SsmlHelper.prosody("Ähnliche", "+15%")+
-					" Künstler sind beispielsweise: " + antwortString));
+					" Künstler zu sind beispielsweise: " + antwortString));
 
 			// mal schaun
 			speechletResponse.setOutputSpeech(antwort);
