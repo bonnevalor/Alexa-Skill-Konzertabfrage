@@ -74,10 +74,22 @@ public class SsmlHelper {
 
 	public static String phonemeIPA(String input) {
 		String ipa = SsmlPronunciation.getIPA(input);
-		return "<phoneme alphabet=\"ipa\" ph=\"" + ipa + "\">" + input + "</phoneme>";
-	}
+		if (ipa.equals(input)) {
+			return input;
+		} else {
+			return "<phoneme alphabet=\"ipa\" ph=\"" + ipa + "\">" + input + "</phoneme>";
+		}
 
-//	public static void main(String[] args) {
-//		System.out.println(prosody("Tes", "+15%"));
-//	}
+	}
+	
+	public static String emphasis (String input, String type) {
+		return "<emphasis level=\"" + type + "\">" + input + "</emphasis>";
+	}
+	
+	public static String paragraph (String input) {
+		return "<p>"+input+"</p>";
+	}
+	public static void main(String[] args) {
+		System.out.println(phonemeIPA("darkthrone"));
+	}
 }

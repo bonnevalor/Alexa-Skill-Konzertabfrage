@@ -29,13 +29,18 @@ public class SsmlPronunciation extends SsmlHelper {
 			return RETRIEVAL_FAILED;
 		}
 		Elements ipa = doc.getElementsByClass("transcribed_word");
-		// System.out.println(ipa.text());
-		return ipa.text();
+		//System.out.println(ipa.text());
+		if (ipa.text().isEmpty()) {
+			return input;
+		} else {
+			return ipa.text();
+		}
+		
 
 	}
 
 //	public static void main(String[] args) {
-//		System.out.println(getIPA("Iron Maiden"));
+//		System.out.println(getIPA("darkthrone"));
 //	}
 
 }

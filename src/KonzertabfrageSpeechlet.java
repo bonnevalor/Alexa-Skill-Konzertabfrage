@@ -92,10 +92,13 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 		String antwortString = "";
 
 		SsmlOutputSpeech antwort = new SsmlOutputSpeech();
+		// If URL Is not Accessible, then return a special answer
 		if (similarAtristsList.contains(lastfm.RETRIEVAL_FAILED)) {
-			antwort.setSsml(SsmlHelper.wrapInSpeak(
-					"<emphasis level=\\\"strong\\\"> Fack! </emphasis> <p> Es ist ein Fehler bei der Abfrage aufgetreten.</p> <p> <say-as interpret-as=\\\"interjection\\\">ohne scheiß.</say-as> </p> <p> Bitte kontaktieren sie den Entwickler.</p>"));
-
+			antwort.setSsml(SsmlHelper.wrapInSpeak(SsmlHelper.emphasis("Fack!", "strong")
+					+ SsmlHelper.paragraph("Es ist ein Fehler bei der Abfrage aufgetreten.")
+					+ SsmlHelper.paragraph(SsmlHelper.interpretAs("ohne scheiß.", "interjection"))
+					+ SsmlHelper.paragraph("Bitte kontaktieren sie den Entwickler.")));
+			// here the answer when everything works correct
 		} else {
 
 			
@@ -168,7 +171,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	}
 
 	/**
-	 * Geeting Phrase at the Begining of the Skill
+	 * Getting Phrase at the Beginning of the Skill
 	 * 
 	 * @author mbeckert
 	 * 
@@ -176,8 +179,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 
 	private SpeechletResponse getWelcomeResponse() {
 		// Create the welcome message.
-		String speechText = "Willkommen. ";
-		// "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
+		String speechText = "Willkommen.";	// OLD: "Willkommen bei Konzertor. Welche band wollen sie live sehen?";
 		String repromptText = "Welche Band gefällt Ihnen?";
 
 		return getSpeechletResponse(speechText, repromptText, true);
