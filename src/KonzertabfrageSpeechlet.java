@@ -91,6 +91,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 		LastFM lastfm = new LastFM(artistName);
 		ArrayList<String> similarAtristsList = lastfm.getSimilarArtistsList();
 		SpeechletResponse speechletResponse = new SpeechletResponse();
+		String antwortString = "";
 
 		SsmlOutputSpeech antwort = new SsmlOutputSpeech();
 		// If URL Is not Accessible, then return a special answer
@@ -102,7 +103,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 			// here the answer when everything works correct
 		} else {
 
-			String antwortString = "";
+			
 
 			for (int i = 0; i < similarAtristsList.size() - 1; i++) {
 				LastFM sArtist = new LastFM(similarAtristsList.get(i));
@@ -122,8 +123,9 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 			} else {
 				sArtistName = SsmlHelper.phonemeIPA(artistName);
 			}
-			antwort.setSsml(SsmlHelper.wrapInSpeak(SsmlHelper.prosody("Ähnliche", "+15%") + " Künstler zu "
-					+ sArtistName + " sind beispielsweise: " + antwortString));
+			antwortString = SsmlHelper.prosody("Ähnliche", "+15%") + " Künstler zu "
+					+ sArtistName + " sind beispielsweise: " + antwortString;
+			antwort.setSsml(SsmlHelper.wrapInSpeak(antwortString));
 
 			// mal schaun
 			speechletResponse.setOutputSpeech(antwort);
@@ -143,7 +145,7 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 		for (int i = 0; i < similarAtristsList.size(); i++) {
 			cardContent = cardContent + similarAtristsList.get(i) + "\n \r\n";
 		}
-		cardContent = cardContent + "\r\n Diese Informationen stammen von Last.fm";
+		cardContent = cardContent + "\r\n Diese Informationen stammen von Last.fm" + "\n " + antwortString;
 
 		card.setContent(cardContent);
 
