@@ -83,8 +83,10 @@ public class KonzertabfrageSpeechlet implements Speechlet {
 	 * @author Florian
 	 */
 	public SpeechletResponse onIntent(IntentRequest intentRequest, Session session) throws SpeechletException {
-
+		log.info("onIntent requestId={}, sessionId={}", intentRequest.getRequestId(),
+                session.getSessionId());
 		Intent intent = intentRequest.getIntent();
+		String intentname = intent.getName();
 		String artistName = intent.getSlot("artist").getValue();
 		LastFM lastfm = new LastFM(artistName);
 		ArrayList<String> similarAtristsList = lastfm.getSimilarArtistsList();
